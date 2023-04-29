@@ -44,7 +44,7 @@ server.post("/tweets", (req, res) => {
 server.get("/tweets", (req, res) => {
   let { page = 1 } = req.query;
   page = Number(page);
-  if (isNaN(page) || page < 1 || page > Math.ceil(tweetsDB.length / 10))
+  if (isNaN(page) page !== 1 || page < 1 || page > Math.ceil(tweetsDB.length / 10))
     return res.status(StatusCodes.BAD_REQUEST).send("Informe uma página válida!");
 
   const start = -10 * page;
