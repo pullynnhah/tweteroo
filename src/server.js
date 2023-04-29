@@ -42,7 +42,20 @@ server.post("/tweets", (req, res) => {
 });
 
 server.get("/tweets", (req, res) => {
-  res.send("GET /tweets");
+  let { page = 1 } = req.query;
+  page = Number(page);
+  if (isNaN(page) || page < 1 || page > Math.ceil(tweetsDB.length / 10))
+    return res.status(StatusCodes.BAD_REQUEST).send("Informe uma página válida!");
+
+  const start = -10 * page;
+  const end = tweetsDB.length + start + 10;
+
+  const tweets = tweetsDB
+    .slice(start, end)
+    .map(t => ({ ...t, avatar: usersDB.find(u => u.username).avatar }));
+
+  tweets.reverse();
+  res.send(tweets);
 });
 
 server.get("/tweets/:username", (req, res) => {
