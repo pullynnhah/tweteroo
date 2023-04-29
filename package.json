@@ -1,5 +1,5 @@
 {
-  "name": "ex-02",
+  "name": "tweteroo",
   "version": "1.0.0",
   "type": "module",
   "main": "./src/server.js",
