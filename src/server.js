@@ -18,14 +18,27 @@ server.post("/sign-up", (req, res) => {
     return res.status(StatusCodes.BAD_REQUEST).send("Todos os campos são obrigatórios!");
 
   if (usersDB.find(u => u.username === username))
-    return res.status(StatusCodes.CONFLICT).send("Usuário já existe!");
+    return res.status(StatusCodes.NOT_FOUND).send("Usuário já existe!");
 
   usersDB.push({ username, avatar });
   res.status(StatusCodes.CREATED).send("OK");
 });
 
 server.post("/tweets", (req, res) => {
-  res.send("POST /tweets");
+  const { username } = req.headers;
+  const { tweet } = req.body;
+
+  const user = usersDB.find(u => u.username === username);
+
+  if (!user) {
+    return res.sendStatus(StatusCodes.UNAUTHORIZED);
+  }
+
+  if (!tweet) return res.status(StatusCodes.BAD_REQUEST).send("Todos os campos são obrigatórios!");
+
+  tweetsDB.push({ username, tweet });
+  console.log(tweetsDB);
+  res.status(StatusCodes.CREATED).send("OK");
 });
 
 server.get("/tweets", (req, res) => {
