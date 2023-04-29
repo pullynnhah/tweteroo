@@ -59,7 +59,14 @@ server.get("/tweets", (req, res) => {
 });
 
 server.get("/tweets/:username", (req, res) => {
-  res.send("GET /tweets/:username");
+  const { username } = req.params;
+
+  const avatar = usersDB.find(u => u.username === username)?.avatar;
+  if (!avatar) return res.status(StatusCodes.NOT_FOUND).send("Usuário não encontrado!");
+
+  const tweets = tweetsDB.filter(t => t.username === username).map(t => ({ ...t, avatar }));
+  tweets.reverse();
+  res.send(tweets);
 });
 
 server.listen(port, () => console.log(`🎉 Server listening on port ${port}...`));
