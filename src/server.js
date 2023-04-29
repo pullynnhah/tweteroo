@@ -49,8 +49,9 @@ server.get("/tweets", (req, res) => {
   if (!isPageValid(page, 1, tweetsDB.length))
     return res.status(StatusCodes.BAD_REQUEST).send("Informe uma página válida!");
 
-  const start = -10 * page;
-  const end = tweetsDB.length + start + 10;
+  const limit = 10;
+  const start = -limit * page;
+  const end = tweetsDB.length + start + limit;
 
   const tweets = tweetsDB
     .slice(start, end)
