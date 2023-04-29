@@ -1,6 +1,7 @@
 import cors from "cors";
 import express, { json } from "express";
 import "dotenv/config";
+import { StatusCodes } from "http-status-codes";
 
 const server = express();
 const port = process.env.PORT || 5000;
@@ -11,7 +12,16 @@ server.use(cors());
 server.use(json());
 
 server.post("/sign-up", (req, res) => {
-  res.send("POST /sign-up");
+  const { username, avatar } = req.body;
+
+  if (!(username && avatar))
+    return res.status(StatusCodes.BAD_REQUEST).send("Todos os campos são obrigatórios!");
+
+  if (usersDB.find(u => u.username === username))
+    return res.status(StatusCodes.CONFLICT).send("Usuário já existe!");
+
+  usersDB.push({ username, avatar });
+  res.status(StatusCodes.CREATED).send("OK");
 });
 
 server.post("/tweets", (req, res) => {
